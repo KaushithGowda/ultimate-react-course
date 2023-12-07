@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './index.css';
 
 const pizzaData = [
     {
@@ -47,23 +48,25 @@ const pizzaData = [
 ];
 
 function App() {
-    return <>
+    return <div className="container">
         <Header />
         <Menu />
         <Footer />
-    </>;
+    </div>;
 }
 
-function Pizza() {
-    return <>
-        <img src="pizzas/focaccia.jpg" alt="focaccia" />
-        <h2>Pizza Focaccia</h2>
-        <p>Bread with italian olive oil and rosemary</p>
-    </>
+function Pizza(props) {
+    return <div className="pizza">
+        <img src={props.image} alt="focaccia" />
+        <div>
+            <h3>{props.name}</h3>
+            <p>{props.des}</p>
+        </div>
+    </div>
 }
 
 function Header() {
-    return <h1>Fast React Corporation!</h1>
+    return <header className="header"><h1>Fast React Corporation!</h1></header>;
 }
 
 function Footer() {
@@ -73,16 +76,16 @@ function Footer() {
     const isOpen = hour >= openHour && hour <= closeHour;
     console.log(isOpen);
 
-    return <footer>{new Date().toLocaleTimeString()} - We're currently open!</footer>
+    return <footer className="footer">{new Date().toLocaleTimeString()} - We're currently open!</footer>
 }
 
 function Menu() {
-    return <div>
-        <h2>Our Menu</h2>
-        <Pizza />
-        <Pizza />
-        <Pizza />
-    </div>
+    return <main className="menu">
+        <h1>Our Menu</h1>
+        <Pizza image="pizzas/focaccia.jpg" name="Pizza Focaccia" price={10} des="Bread with italian olive oil and rosemary" />
+        <Pizza image="pizzas/funghi.jpg" name="Pizza Funghi" price={20} des="Mushrooms, Onions..." />
+        <Pizza image="pizzas/margherita.jpg" name="Pizza Margherita" price={20} des="Carrots, Chilli" />
+    </main>
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
