@@ -75,13 +75,12 @@ function Header() {
 }
 
 function Footer() {
-    // const hour = new Date().getHours();
-    // const openHour = 9;
-    // const closeHour = 5;
-    // const isOpen = hour >= openHour && hour <= closeHour;
-    // console.log(isOpen);
+    const hour = new Date().getHours();
+    const openHour = 9;
+    const closeHour = 18;
+    const isOpen = hour >= openHour && hour <= closeHour;
 
-    return <footer className="footer">{new Date().toLocaleTimeString()} - We're currently open!</footer>
+    return <footer className="footer">{isOpen ? `${new Date().toLocaleTimeString()} - We're currently open!` : `Closed`}</footer>
 }
 
 function Menu() {
@@ -89,7 +88,7 @@ function Menu() {
         <h1>Our Menu</h1>
         <div className="pizzas">
             {
-                pizzaData.map((pizza) => {
+                pizzaData?.map((pizza) => {
                     return <Pizza pizzaObj={pizza} key={pizza.name} />;
                 })
             };
