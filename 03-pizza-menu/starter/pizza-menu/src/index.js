@@ -49,11 +49,11 @@ const pizzaData = [
 
 function App() {
   return (
-    <div className="container">
+    <React.Fragment className="container">
       <Header />
       <Menu />
       <Footer />
-    </div>
+    </React.Fragment>
   );
 }
 
