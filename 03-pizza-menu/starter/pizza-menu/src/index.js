@@ -77,20 +77,23 @@ function Header() {
 function Footer() {
     const hour = new Date().getHours();
     const openHour = 9;
-    const closeHour = 18;
+    const closeHour = 19;
     const isOpen = hour >= openHour && hour <= closeHour;
 
-    return <footer className="footer">{isOpen ? `${new Date().toLocaleTimeString()} - We're currently open!` : `Closed`}</footer>
+    return <footer className="footer">{isOpen ? `${new Date().toLocaleTimeString()} - We're currently open and happy to serve you! (Open hours${openHour} AM to ${closeHour} PM)` : `Sorry we are Closed! We are open from ${openHour} AM to ${closeHour} PM!`}</footer>
 }
 
 function Menu() {
+    const pizza = pizzaData;
+    const itemsLength = pizza.length;
     return <main className="menu">
         <h1>Our Menu</h1>
         <div className="pizzas">
             {
-                pizzaData?.map((pizza) => {
+                itemsLength > 0 ? pizza.map((pizza) => {
                     return <Pizza pizzaObj={pizza} key={pizza.name} />;
-                })
+                }) :
+                    <h2>We are still working on the menu items!</h2>
             };
         </div>
     </main>
