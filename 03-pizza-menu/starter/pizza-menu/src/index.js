@@ -57,10 +57,15 @@ function App() {
 
 function Pizza(props) {
     return <div className="pizza">
-        <img src={props.image} alt="focaccia" />
+        <img src={props.pizzaObj.photoName} alt="focaccia" />
         <div>
-            <h3>{props.name}</h3>
-            <p>{props.des}</p>
+            <h3>{props.pizzaObj.name}</h3>
+            <span>{props.pizzaObj.ingredients}</span>
+            <p>{props.pizzaObj.price}</p>
+            {
+                props.pizzaObj.soldOut &&
+                <p className="sold-out">Sold Out</p>
+            }
         </div>
     </div>
 }
@@ -70,11 +75,11 @@ function Header() {
 }
 
 function Footer() {
-    const hour = new Date().getHours();
-    const openHour = 9;
-    const closeHour = 5;
-    const isOpen = hour >= openHour && hour <= closeHour;
-    console.log(isOpen);
+    // const hour = new Date().getHours();
+    // const openHour = 9;
+    // const closeHour = 5;
+    // const isOpen = hour >= openHour && hour <= closeHour;
+    // console.log(isOpen);
 
     return <footer className="footer">{new Date().toLocaleTimeString()} - We're currently open!</footer>
 }
@@ -82,9 +87,13 @@ function Footer() {
 function Menu() {
     return <main className="menu">
         <h1>Our Menu</h1>
-        <Pizza image="pizzas/focaccia.jpg" name="Pizza Focaccia" price={10} des="Bread with italian olive oil and rosemary" />
-        <Pizza image="pizzas/funghi.jpg" name="Pizza Funghi" price={20} des="Mushrooms, Onions..." />
-        <Pizza image="pizzas/margherita.jpg" name="Pizza Margherita" price={20} des="Carrots, Chilli" />
+        <div className="pizzas">
+            {
+                pizzaData.map((pizza) => {
+                    return <Pizza pizzaObj={pizza} key={pizza.name} />;
+                })
+            };
+        </div>
     </main>
 }
 
