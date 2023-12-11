@@ -2,6 +2,34 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
+const skills = [
+  {
+    skill: 'React',
+    level: 'begineer',
+    color: 'blue',
+  },
+  {
+    skill: 'Html',
+    level: 'advanced',
+    color: 'orange',
+  },
+  {
+    skill: 'CSS',
+    level: 'advanced',
+    color: 'lightblue',
+  },
+  {
+    skill: 'JS',
+    level: 'intermediate',
+    color: 'yellow',
+  },
+  {
+    skill: 'Sass',
+    level: 'begineer',
+    color: 'pink',
+  },
+];
+
 function App() {
   return (
     <div className="card">
@@ -24,9 +52,7 @@ function Avatar() {
 function Intro() {
   return (
     <div>
-      <h1>
-        Jonas Schmedtmann
-      </h1>
+      <h1>Jonas Schmedtmann</h1>
       <p>
         Full-stack web developer and teacher at Udemy. When not coding or
         preparing a course, I like to play board games, to cook (and eat), or to
@@ -37,16 +63,27 @@ function Intro() {
 }
 
 function SkillList() {
-  return <div className="skill-list">
-    <Skill bg="blue" skill="React😎" />
-    <Skill bg="red" skill="Js🪄" />
-    <Skill bg="orange" skill="Html🔖" />
-    <Skill bg="yellow" skill="Sass🥰" />
-  </div>
+  return (
+    <div className="skill-list">
+      {skills.length > 0 &&
+        skills.map((skill, key) => <Skill skill={skill} key={key} />)}
+    </div>
+  );
 }
 
-function Skill(props) {
-  return <div className={`skill ${props.bg}`}>{props.skill}</div>
+function Skill({ skill }) {
+  return (
+    <div style={{ backgroundColor: skill.color }} className="skill">
+      <span>{skill.skill}</span>
+      <span>
+        {skill.level === 'advanced'
+          ? '💪🏻'
+          : skill.level === 'intermediate'
+          ? '🫳🏻'
+          : '🤏🏻'}
+      </span>
+    </div>
+  );
 }
 
 const rootElement = document.getElementById('root');

@@ -49,23 +49,23 @@ const pizzaData = [
 
 function App() {
   return (
-    <React.Fragment className="container">
+    <div className="container">
       <Header />
       <Menu />
       <Footer />
-    </React.Fragment>
+    </div>
   );
 }
 
-function Pizza(props) {
+function Pizza({ pizzaObj }) {
   return (
-    <div className="pizza">
-      <img src={props.pizzaObj.photoName} alt="focaccia" />
+    <div className={`pizza ${pizzaObj.soldOut && 'sold-out'}`}>
+      <img src={pizzaObj.photoName} alt="focaccia" />
       <div>
-        <h3>{props.pizzaObj.name}</h3>
-        <span>{props.pizzaObj.ingredients}</span>
-        <p>{props.pizzaObj.price}</p>
-        {props.pizzaObj.soldOut && <p className="sold-out">Sold Out</p>}
+        <h3>{pizzaObj.name}</h3>
+        <span>{pizzaObj.ingredients}</span>
+        <p>${pizzaObj.price}</p>
+        {pizzaObj.soldOut && <p className="sold-out">Sold Out</p>}
       </div>
     </div>
   );
@@ -118,7 +118,6 @@ function Menu() {
         ) : (
           <h2>We are still working on the menu items!</h2>
         )}
-        ;
       </div>
     </main>
   );
