@@ -6,6 +6,14 @@ function App() {
   ];
   const step = 2;
 
+  function handlePrev() {
+    console.log('Hey there! Prev');
+  }
+
+  function handleNext() {
+    console.log('Hey there!Next');
+  }
+
   return (
     <div className="steps">
       <div className="numbers">
@@ -17,8 +25,8 @@ function App() {
         messages[step - 1]
       }`}</p>
       <div className="buttons">
-        <button>Previous</button>
-        <button>Next</button>
+        <button onClick={handlePrev}>Previous</button>
+        <button onClick={handleNext}>Next</button>
       </div>
     </div>
   );
