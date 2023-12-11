@@ -1,17 +1,19 @@
+import { useState } from 'react';
+
 function App() {
   const messages = [
     'Learn React ⚛️',
     'Apply for jobs 💼',
     'Invest your new income 🤑',
   ];
-  const step = 2;
+  const [step, stepStep] = useState(1);
 
   function handlePrev() {
-    console.log('Hey there! Prev');
+    if (step > 1) stepStep(step - 1);
   }
 
   function handleNext() {
-    console.log('Hey there!Next');
+    if (step < 3) stepStep(step + 1);
   }
 
   return (
