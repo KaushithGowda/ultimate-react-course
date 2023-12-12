@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const initialItems = [
   { id: 1, description: 'Passports', quantity: 2, packed: true },
   { id: 2, description: 'Socks', quantity: 12, packed: false },
@@ -23,7 +25,7 @@ function PackingList() {
     <div className="list">
       <ul>
         {initialItems.length > 0 &&
-          initialItems.map((item) => <Item item={item} />)}
+          initialItems.map((item) => <Item item={item} key={item.id} />)}
       </ul>
     </div>
   );
@@ -50,10 +52,34 @@ function Footer() {
 }
 
 function Form() {
+  const [des, setDes] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!des.length > 0) return;
+
+    const newItem = { des, quantity, packed: false, id: Date.now() };
+    console.log(newItem);
+
+    setDes('');
+    setQuantity(1);
+  }
+
   return (
-    <div className="add-form">
-      <input type="text" placeholder="Item Name" />
-      <select name="Quantity" id="quantity">
+    <form className="add-form" onSubmit={handleSubmit}>
+      <h3>What do you want for the trip?</h3>
+      <input
+        type="text"
+        placeholder="Item..."
+        value={des}
+        onChange={(e) => setDes(e.target.value)}
+      />
+      <select
+        name="Quantity"
+        id="quantity"
+        onChange={(e) => setQuantity(Number(e.target.value))}
+        value={quantity}
+      >
         <option value={1}>1</option>
         <option value={2}>2</option>
         <option value={3}>3</option>
@@ -66,7 +92,7 @@ function Form() {
         <option value={10}>10</option>
       </select>
       <button>Add</button>
-    </div>
+    </form>
   );
 }
 
