@@ -38,6 +38,10 @@ function App() {
     },
   ];
 
+  function handleClick(id) {
+    setSelectedId(id !== selectedId ? id : null);
+  }
+
   return (
     <div className="App">
       <div className="flashcards">
@@ -45,7 +49,7 @@ function App() {
           questions.map((item) => (
             <div
               className={selectedId === item.id ? 'selected' : ''}
-              onClick={() => setSelectedId(item.id)}
+              onClick={() => handleClick(item.id)}
               key={item.id}
             >
               {selectedId === item.id ? item.answer : item.question}
