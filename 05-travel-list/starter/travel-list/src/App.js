@@ -1,22 +1,21 @@
 import { useState } from 'react';
 
-const initialItems = [
-  { id: 1, description: 'Passports', quantity: 2, packed: true },
-  { id: 2, description: 'Socks', quantity: 12, packed: false },
-];
-
 function App() {
   const [items, setItems] = useState([]);
 
   function handleAdd(newItem) {
-    setItems(() => [...items, newItem]);
+    setItems((items) => [...items, newItem]);
+  }
+
+  function handleDelete(id) {
+    setItems((items) => items.filter((item) => item.id !== id));
   }
 
   return (
     <div className="app">
       <Header />
       <Form addItems={handleAdd} />
-      <PackingList />
+      <PackingList items={items} deleteItems={handleDelete} />
       <Footer />
     </div>
   );
@@ -26,24 +25,26 @@ function Header() {
   return <h1>Far away</h1>;
 }
 
-function PackingList() {
+function PackingList({ items, deleteItems }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.length > 0 &&
-          initialItems.map((item) => <Item item={item} key={item.id} />)}
+        {items.length > 0 &&
+          items.map((item) => (
+            <Item deleteItems={deleteItems} item={item} key={item.id} />
+          ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ item, deleteItems }) {
   return (
     <li style={item.packed ? { textDecoration: 'line-through' } : {}}>
       <input type="checkbox" id="item-name" />
       <label htmlFor="item-name">
-        {' '}
-        {item.quantity} {item.description} ❌
+        {item.quantity} {item.des}{' '}
+        <span onClick={() => deleteItems(item.id)}>❌</span>
       </label>
     </li>
   );
