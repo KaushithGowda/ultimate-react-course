@@ -6,10 +6,16 @@ const initialItems = [
 ];
 
 function App() {
+  const [items, setItems] = useState([]);
+
+  function handleAdd(newItem) {
+    setItems(() => [...items, newItem]);
+  }
+
   return (
     <div className="app">
       <Header />
-      <Form />
+      <Form addItems={handleAdd} />
       <PackingList />
       <Footer />
     </div>
@@ -51,15 +57,16 @@ function Footer() {
   );
 }
 
-function Form() {
+function Form({ addItems }) {
   const [des, setDes] = useState('');
   const [quantity, setQuantity] = useState(1);
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!des.length > 0) return;
 
     const newItem = { des, quantity, packed: false, id: Date.now() };
-    console.log(newItem);
+    addItems(newItem);
 
     setDes('');
     setQuantity(1);
