@@ -38,11 +38,28 @@ function Header() {
 }
 
 function PackingList({ items, toggleItems, deleteItems }) {
+  const [option, setOption] = useState('input');
+  let sortedItems;
+
+  if (option === 'input') {
+    sortedItems = items;
+  }
+  if (option === 'des') {
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localCompare(b.description));
+  }
+  if (option === 'packed') {
+    sortedItems = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed));
+  }
+
   return (
     <div className="list">
       <ul>
-        {items.length > 0 &&
-          items.map((item) => (
+        {sortedItems?.length > 0 &&
+          sortedItems.map((item) => (
             <Item
               toggleItems={toggleItems}
               deleteItems={deleteItems}
@@ -51,6 +68,13 @@ function PackingList({ items, toggleItems, deleteItems }) {
             />
           ))}
       </ul>
+      <div>
+        <select value={option} onChange={(e) => setOption(e.target.value)}>
+          <option value={'input'}>Sorting by Input</option>
+          <option value={'des'}>Sorting by Description</option>
+          <option value={'packed'}>Sorting by Packed Items</option>
+        </select>
+      </div>
     </div>
   );
 }
@@ -74,7 +98,6 @@ function Item({ item, toggleItems, deleteItems }) {
 function Footer({ items }) {
   const noOfItems = items?.length;
   const packedItems = items.filter((item) => item.packed).length;
-  console.log(packedItems);
   const percentage = packedItems !== 0 ? (packedItems / noOfItems) * 100 : 0;
   return (
     <footer className="stats">
