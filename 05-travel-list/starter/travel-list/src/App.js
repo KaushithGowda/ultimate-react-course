@@ -19,6 +19,11 @@ function App() {
     );
   }
 
+  function clearItems() {
+    const res = window.confirm('Are you sure you want to clear your items?');
+    if (res) setItems([]);
+  }
+
   return (
     <div className="app">
       <Header />
@@ -27,6 +32,7 @@ function App() {
         items={items}
         toggleItems={handleToggle}
         deleteItems={handleDelete}
+        clearItems={clearItems}
       />
       <Footer items={items} />
     </div>
@@ -37,7 +43,7 @@ function Header() {
   return <h1>Far away</h1>;
 }
 
-function PackingList({ items, toggleItems, deleteItems }) {
+function PackingList({ items, toggleItems, deleteItems, clearItems }) {
   const [option, setOption] = useState('input');
   let sortedItems;
 
@@ -45,9 +51,7 @@ function PackingList({ items, toggleItems, deleteItems }) {
     sortedItems = items;
   }
   if (option === 'des') {
-    sortedItems = items
-      .slice()
-      .sort((a, b) => a.description.localCompare(b.description));
+    sortedItems = items.slice().sort((a, b) => a.des.localeCompare(b.des));
   }
   if (option === 'packed') {
     sortedItems = items
@@ -68,12 +72,13 @@ function PackingList({ items, toggleItems, deleteItems }) {
             />
           ))}
       </ul>
-      <div>
+      <div className="actions">
         <select value={option} onChange={(e) => setOption(e.target.value)}>
           <option value={'input'}>Sorting by Input</option>
           <option value={'des'}>Sorting by Description</option>
           <option value={'packed'}>Sorting by Packed Items</option>
         </select>
+        <button onClick={() => clearItems()}>Clear</button>
       </div>
     </div>
   );
