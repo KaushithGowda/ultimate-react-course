@@ -35,13 +35,17 @@ function App() {
             messages[step - 1]
           }`}</p>
           <div className="buttons">
-            <button onClick={handlePrev}>Previous</button>
-            <button onClick={handleNext}>Next</button>
+            <Button click={handlePrev}>👈🏻 Previous</Button>
+            <Button click={handleNext}>Next 👉🏻</Button>
           </div>
         </div>
       )}
     </>
   );
+}
+
+function Button({ click, children }) {
+  return <button onClick={click}>{children}</button>;
 }
 
 export default App;
