@@ -68,26 +68,27 @@ export default function App() {
 
 function Main({ movies }) {
   const [watched, setWatched] = useState(tempWatchedData);
-  const [isOpen1, setIsOpen1] = useState(true);
-  const [isOpen2, setIsOpen2] = useState(true);
 
   return (
     <main className="main">
-      <div className="box">
-        <Button setIsOpen={setIsOpen1}>{isOpen1 ? '–' : '+'}</Button>
-        {isOpen1 && <Movies movies={movies} />}
-      </div>
-
-      <div className="box">
-        <Button setIsOpen={setIsOpen2}>{isOpen2 ? '–' : '+'}</Button>
-        {isOpen2 && (
-          <>
-            <MoviesHeader watched={watched} />
-            <WatchedMovies watched={watched} />
-          </>
-        )}
-      </div>
+      <Box>
+        <Movies movies={movies} />
+      </Box>
+      <Box>
+        <MoviesHeader watched={watched} />
+        <WatchedMovies watched={watched} />
+      </Box>
     </main>
+  );
+}
+
+function Box({ children }) {
+  const [isOpen, setIsOpen] = useState(true);
+  return (
+    <div className="box">
+      <Button setIsOpen={setIsOpen}>{isOpen ? '–' : '+'}</Button>
+      {isOpen && children}
+    </div>
   );
 }
 
