@@ -56,7 +56,11 @@ export default function App() {
 
   return (
     <>
-      <NavBar movies={movies} />
+      <NavBar>
+        <Logo />
+        <SearchBar />
+        <Results movies={{ movies }} />
+      </NavBar>
       <Main movies={movies} />
     </>
   );
@@ -171,14 +175,8 @@ function Button({ setIsOpen, children }) {
   );
 }
 
-function NavBar({ movies }) {
-  return (
-    <nav className="nav-bar">
-      <Logo />
-      <SearchBar />
-      <Results movies={movies} />
-    </nav>
-  );
+function NavBar({ movies, children }) {
+  return <nav className="nav-bar">{children}</nav>;
 }
 
 function SearchBar() {
