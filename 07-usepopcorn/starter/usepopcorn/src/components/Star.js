@@ -8,14 +8,21 @@ const containerStyle = {
 
 export default function StarRating({ number = 5 }) {
   const [rate, setRate] = useState(0);
+  const [tempRate, setTempRate] = useState(0);
+
   return (
     <div style={containerStyle}>
       {Array.from({ length: number }, (_, i) => (
         <span key={i}>
-          <Star onRate={() => setRate(i + 1)} full={rate >= i + 1} />
+          <Star
+            onTempEnter={() => setTempRate(i + 1)}
+            onTempLeave={() => setTempRate()}
+            onRate={() => setRate(i + 1)}
+            full={tempRate >= i + 1 || rate >= i + 1}
+          />
         </span>
       ))}
-      {rate || ''}
+      <span>{tempRate || rate || ''}</span>
     </div>
   );
 }
@@ -25,9 +32,13 @@ const starStyle = {
   width: '30px',
 };
 
-function Star({ onRate, full }) {
+function Star({ onTempEnter, onTempLeave, onRate, full }) {
   return (
-    <span onClick={onRate}>
+    <span
+      onMouseEnter={onTempEnter}
+      onMouseLeave={onTempLeave}
+      onClick={onRate}
+    >
       {full ? (
         <svg
           style={starStyle}
