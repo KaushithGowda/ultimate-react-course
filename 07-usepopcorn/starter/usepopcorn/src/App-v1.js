@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const tempMovieData = [
   {
@@ -51,16 +51,8 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-const Key = 'ac8d69b';
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
-
-  useEffect(() => {
-    fetch(`http://www.omdbapi.com/?apikey=${Key}&s=interstellar`)
-      .then((res) => res.json())
-      .then((data) => setMovies(data.Search || []))
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []);
 
   return (
     <>
