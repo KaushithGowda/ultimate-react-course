@@ -1,29 +1,28 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 
-const tempMovieData = [
-  {
-    imdbID: 'tt1375666',
-    Title: 'Inception',
-    Year: '2010',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
-  },
-  {
-    imdbID: 'tt0133093',
-    Title: 'The Matrix',
-    Year: '1999',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg',
-  },
-  {
-    imdbID: 'tt6751668',
-    Title: 'Parasite',
-    Year: '2019',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg',
-  },
-];
+// const tempMovieData = [
+//   {
+//     imdbID: 'tt1375666',
+//     Title: 'Inception',
+//     Year: '2010',
+//     Poster:
+//       'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
+//   },
+//   {
+//     imdbID: 'tt0133093',
+//     Title: 'The Matrix',
+//     Year: '1999',
+//     Poster:
+//       'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg',
+//   },
+//   {
+//     imdbID: 'tt6751668',
+//     Title: 'Parasite',
+//     Year: '2019',
+//     Poster:
+//       'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg',
+//   },
+// ];
 
 const tempWatchedData = [
   {
@@ -55,46 +54,75 @@ const Key = 'ac8d69b';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState(tempWatchedData);
+  // const [watched, setWatched] = useState(tempWatchedData);
+  const watched = tempWatchedData;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const query = 'John wick';
+  const [query, setQuery] = useState('');
+  const [selectedId, setSelectedId] = useState(null);
+
+  function handleSelectId(id) {
+    setSelectedId((selectedId) => (id === selectedId ? null : id));
+  }
+
+  function clearSelectedId() {
+    setSelectedId(null);
+  }
 
   useEffect(() => {
     async function getMovies() {
       try {
+        setError('');
         setIsLoading(true);
         const res = await fetch(
           `http://www.omdbapi.com/?apikey=${Key}&s=${query}`
         );
         if (!res.ok) throw new Error('Unable to fetch movies!');
         const data = await res.json();
+        if (data.Response === 'False')
+          throw new Error(`⛔️ Movies not found for ${query}!`);
         setMovies(data.Search || []);
-      } catch (e) {
-        setError(e.message);
+      } catch (err) {
+        setError(err.message);
       } finally {
         setIsLoading(false);
       }
     }
+    if (query.length < 3) {
+      setError('');
+      setMovies([]);
+      return;
+    }
     getMovies();
-  }, []);
+  }, [query]);
 
   return (
     <>
       <NavBar>
         <Logo />
-        <SearchBar />
+        <SearchBar query={query} setQuery={setQuery} />
         <Results movies={{ movies }} />
       </NavBar>
       <main className="main">
         <Box>
           {isLoading && <Loader />}
-          {!isLoading && !error && <Movies movies={movies} />}
+          {!isLoading && !error && (
+            <Movies movies={movies} handleSelectId={handleSelectId} />
+          )}
           {error && <Error message={error} />}
         </Box>
         <Box>
-          <MoviesHeader watched={watched} />
-          <WatchedMovies watched={watched} />
+          {selectedId ? (
+            <MovieDetails
+              selectedId={selectedId}
+              clearSelectedId={clearSelectedId}
+            />
+          ) : (
+            <>
+              <MoviesHeader watched={watched} />
+              <WatchedMovies watched={watched} />
+            </>
+          )}
         </Box>
       </main>
     </>
@@ -168,11 +196,11 @@ function WatchedMovies({ watched }) {
   );
 }
 
-function Movies({ movies }) {
+function Movies({ movies, handleSelectId }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <li key={movie.imdbID}>
+        <li onClick={() => handleSelectId(movie.imdbID)} key={movie.imdbID}>
           <img src={movie.Poster} alt={`${movie.Title} poster`} />
           <h3>{movie.Title}</h3>
           <div>
@@ -199,8 +227,7 @@ function NavBar({ movies, children }) {
   return <nav className="nav-bar">{children}</nav>;
 }
 
-function SearchBar() {
-  const [query, setQuery] = useState('');
+function SearchBar({ query, setQuery }) {
   return (
     <input
       className="search"
@@ -234,5 +261,18 @@ function Loader() {
 }
 
 function Error({ message }) {
-  return <p>{message}</p>;
+  return <p className="error">{message}</p>;
+}
+
+function MovieDetails({ selectedId, clearSelectedId }) {
+  return (
+    <div className="details">
+      <header>
+        <button className="btn-back" onClick={() => clearSelectedId()}>
+          &larr;
+        </button>
+        <p className="">{selectedId}</p>
+      </header>
+    </div>
+  );
 }
