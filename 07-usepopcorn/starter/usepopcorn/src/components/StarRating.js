@@ -2,13 +2,20 @@ import { useState } from 'react';
 
 const containerStyle = {
   display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   borderRadius: '40px',
   margin: '20px 0',
 };
 
-export default function StarRating({ number = 5 }) {
+export default function StarRating({ number = 5, onSetRating }) {
   const [rate, setRate] = useState(0);
   const [tempRate, setTempRate] = useState(0);
+
+  function handleRating(rating) {
+    setRate(rating);
+    onSetRating(rating);
+  }
 
   return (
     <div style={containerStyle}>
@@ -17,12 +24,14 @@ export default function StarRating({ number = 5 }) {
           <Star
             onTempEnter={() => setTempRate(i + 1)}
             onTempLeave={() => setTempRate()}
-            onRate={() => setRate(i + 1)}
+            onRate={() => handleRating(i + 1)}
             full={tempRate >= i + 1 || rate >= i + 1}
           />
         </span>
       ))}
-      <span>{tempRate || rate || ''}</span>
+      <span style={{ fontSize: 'large', fontWeight: 'bold' }}>
+        {tempRate || rate || ''}
+      </span>
     </div>
   );
 }
@@ -42,7 +51,7 @@ function Star({ onTempEnter, onTempLeave, onRate, full }) {
       {full ? (
         <svg
           style={starStyle}
-          fill="black"
+          fill="yellow"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
         >

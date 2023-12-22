@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import StarRating from './components/StarRating';
 
 // const tempMovieData = [
 //   {
@@ -54,12 +55,15 @@ const Key = 'ac8d69b';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  // const [watched, setWatched] = useState(tempWatchedData);
-  const watched = tempWatchedData;
+  const [watched, setWatched] = useState(tempWatchedData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState(null);
+
+  function handleAddWatched(movie) {
+    setWatched((w) => [...w, movie]);
+  }
 
   function handleSelectId(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -116,6 +120,7 @@ export default function App() {
             <MovieDetails
               selectedId={selectedId}
               clearSelectedId={clearSelectedId}
+              handleAddWatched={handleAddWatched}
             />
           ) : (
             <>
@@ -264,15 +269,92 @@ function Error({ message }) {
   return <p className="error">{message}</p>;
 }
 
-function MovieDetails({ selectedId, clearSelectedId }) {
+function MovieDetails({ selectedId, clearSelectedId, handleAddWatched }) {
+  const [movie, setMovie] = useState({});
+  const [isWatched, setIsWatched] = useState(false);
+  const [userRating, setUserRating] = useState(null);
+  const {
+    Title: title,
+    Poster: poster,
+    Released: released,
+    Runtime: runtime,
+    Genre: genre,
+    Actors: actors,
+    Director: director,
+    Plot: plot,
+    imdbRating,
+  } = movie;
+
+  function handleAdd() {
+    const newMovie = {
+      selectedId,
+      Title: title,
+      Year: released,
+      Poster: poster,
+      runtime,
+      imdbRating,
+      userRating,
+    };
+    handleAddWatched(newMovie);
+  }
+
+  useEffect(() => {
+    async function getMovieDetail() {
+      try {
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${Key}&i=${selectedId}`
+        );
+        const data = await res.json();
+        setMovie(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getMovieDetail();
+  }, [selectedId]);
+
   return (
     <div className="details">
       <header>
         <button className="btn-back" onClick={() => clearSelectedId()}>
           &larr;
         </button>
-        <p className="">{selectedId}</p>
+        <img src={poster} alt={`Poster of ${movie} movie`} />
+        <div className="details-overview">
+          <h2>{title}</h2>
+          <p>
+            {released} &bull; {runtime}
+          </p>
+          <p>{genre}</p>
+          <p>
+            <span>⭐️</span>
+            {imdbRating} IMDb rating
+          </p>
+        </div>
       </header>
+      <section>
+        <div className="rating">
+          {!isWatched ? (
+            <>
+              <StarRating number={5} onSetRating={setUserRating} />
+              {userRating > 0 && (
+                <button className="btn-add" onClick={handleAdd}>
+                  + Add to list
+                </button>
+              )}
+            </>
+          ) : (
+            <p>
+              {/* You rated with movie {watchedUserRating} <span>⭐️</span> */}
+            </p>
+          )}
+        </div>
+        <p>
+          <em>{plot}</em>
+        </p>
+        <p>Starring {actors}</p>
+        <p>Directed by {director}</p>
+      </section>
     </div>
   );
 }
