@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom';
+import styles from './PageNav.module.css';
 
 function PageNav() {
   return (
-    <>
-      <ul>
+    <div>
+      <ul className={styles.sas}>
         <li>
           <NavLink to={'/'}>Home</NavLink>
         </li>
@@ -17,7 +18,7 @@ function PageNav() {
           <NavLink to={'/page-not-found'}>Page Not Found❗️</NavLink>
         </li>
       </ul>
-    </>
+    </div>
   );
 }
 

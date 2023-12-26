@@ -4,7 +4,7 @@ function Product() {
   return (
     <div>
       <PageNav />
-      <h1>Product</h1>
+      <h1 className="test">Product</h1>
     </div>
   );
 }
