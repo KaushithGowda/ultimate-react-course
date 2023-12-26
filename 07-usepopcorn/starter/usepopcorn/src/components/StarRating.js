@@ -1,13 +1,5 @@
 import { useState } from 'react';
 
-const containerStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: '40px',
-  margin: '20px 0',
-};
-
 export default function StarRating({ number = 5, onSetRating }) {
   const [rate, setRate] = useState(0);
   const [tempRate, setTempRate] = useState(0);
@@ -18,7 +10,12 @@ export default function StarRating({ number = 5, onSetRating }) {
   }
 
   return (
-    <div style={containerStyle}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
       {Array.from({ length: number }, (_, i) => (
         <span key={i}>
           <Star
@@ -29,7 +26,13 @@ export default function StarRating({ number = 5, onSetRating }) {
           />
         </span>
       ))}
-      <span style={{ fontSize: 'large', fontWeight: 'bold' }}>
+      <span
+        style={{
+          color: '#fcc419',
+          lineHeight: 1,
+          marginLeft: '10px',
+        }}
+      >
         {tempRate || rate || ''}
       </span>
     </div>
@@ -37,8 +40,8 @@ export default function StarRating({ number = 5, onSetRating }) {
 }
 
 const starStyle = {
-  height: '30px',
-  width: '30px',
+  height: '20px',
+  width: '20px',
 };
 
 function Star({ onTempEnter, onTempLeave, onRate, full }) {
@@ -51,7 +54,7 @@ function Star({ onTempEnter, onTempLeave, onRate, full }) {
       {full ? (
         <svg
           style={starStyle}
-          fill="yellow"
+          fill="#fcc419"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
         >
@@ -63,7 +66,7 @@ function Star({ onTempEnter, onTempLeave, onRate, full }) {
           fill="none"
           viewBox="0 0 24 24"
           style={starStyle}
-          stroke="black"
+          stroke="#fcc419"
         >
           <path
             strokeLinecap="round"
