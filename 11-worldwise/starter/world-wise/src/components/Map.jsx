@@ -1,35 +1,85 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  useMapEvents,
+} from 'react-leaflet';
+import { useCityContext } from '../contexts/CitiesContext';
+import { useGeolocation } from '../hooks/useGeolocation';
+import { useEffect, useState } from 'react';
+import Button from '../components/Button';
 import styles from './Map.module.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { useState } from 'react';
 
 function Map() {
-  const [searchParam, setSearchParam] = useSearchParams();
+  const [searchParam] = useSearchParams();
   const [mapPosition, setMapPosition] = useState([40, 0]);
-  const navigate = useNavigate();
+  const {
+    isLoading: isLoadingPosition,
+    position: geoLocationPosition,
+    getPosition,
+  } = useGeolocation();
+  const { cities } = useCityContext();
 
-  const lat = searchParam.get('lat');
-  const lng = searchParam.get('lng');
+  const mapLat = searchParam.get('lat');
+  const mapLng = searchParam.get('lng');
+
+  useEffect(() => {
+    if (mapLat && mapLng) setMapPosition([mapLat, mapLng]);
+  }, [mapLat, mapLng]);
+
+  useEffect(() => {
+    if (geoLocationPosition)
+      setMapPosition([geoLocationPosition.lat, geoLocationPosition.lng]);
+  }, [geoLocationPosition]);
 
   return (
     <div className={styles.mapContainer}>
+      {!geoLocationPosition && (
+        <Button type="position" onClick={getPosition}>
+          {isLoadingPosition ? 'Loading...' : 'Use your location'}
+        </Button>
+      )}
       <MapContainer
         className={styles.map}
         center={mapPosition}
-        zoom={13}
+        zoom={6}
         scrollWheelZoom={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
         />
-        <Marker position={mapPosition}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        {cities.length > 0 &&
+          cities.map((city) => (
+            <Marker
+              position={[city.position.lat, city.position.lng]}
+              key={city.id}
+            >
+              <Popup>{city.cityName}</Popup>
+            </Marker>
+          ))}
+        <ChangeCity position={mapPosition} />
+        <DetectClick />
       </MapContainer>
     </div>
   );
 }
+
+function ChangeCity({ position }) {
+  const map = useMap();
+  map.setView(position);
+  return null;
+}
+
+function DetectClick() {
+  const navigate = useNavigate();
+  useMapEvents({
+    click: (e) => navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`),
+  });
+  return null;
+}
+
 export default Map;
