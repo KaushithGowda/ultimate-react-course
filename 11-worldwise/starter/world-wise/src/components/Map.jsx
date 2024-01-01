@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   MapContainer,
   TileLayer,
@@ -9,12 +9,12 @@ import {
 } from 'react-leaflet';
 import { useCityContext } from '../contexts/CitiesContext';
 import { useGeolocation } from '../hooks/useGeolocation';
+import { useUrlPosition } from '../hooks/useUrlPosition';
 import { useEffect, useState } from 'react';
 import Button from '../components/Button';
 import styles from './Map.module.css';
 
 function Map() {
-  const [searchParam] = useSearchParams();
   const [mapPosition, setMapPosition] = useState([40, 0]);
   const {
     isLoading: isLoadingPosition,
@@ -23,8 +23,7 @@ function Map() {
   } = useGeolocation();
   const { cities } = useCityContext();
 
-  const mapLat = searchParam.get('lat');
-  const mapLng = searchParam.get('lng');
+  const [mapLat, mapLng] = useUrlPosition();
 
   useEffect(() => {
     if (mapLat && mapLng) setMapPosition([mapLat, mapLng]);
