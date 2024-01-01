@@ -3,6 +3,7 @@ import styles from './Login.module.css';
 import PageNav from '../components/PageNav';
 import { useAuthContext } from '../contexts/FakeAuthenticationContext';
 import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
 
 export default function Login() {
   // PRE-FILL FOR DEV PURPOSES
@@ -49,7 +50,9 @@ export default function Login() {
         </div>
 
         <div>
-          <button>Login</button>
+          <Button type="primary">
+            <span style={{ color: '#fff' }}>Login</span>
+          </Button>
         </div>
       </form>
     </main>
