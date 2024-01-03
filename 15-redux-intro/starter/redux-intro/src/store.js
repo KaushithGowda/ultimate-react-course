@@ -1,13 +1,20 @@
-import { createStore } from 'redux';
+import { combineReducers, createStore } from 'redux';
 
 // 262. Creating a Reducer: Bank Account
-const initialState = {
+const initialAccountState = {
   balence: 0,
   loan: 0,
   loanPurpose: '',
 };
 
-function reducer(state = initialState, action) {
+// 265. Adding More State: Customer
+const initialCustomerState = {
+  fullName: '',
+  nationalId: null,
+  createdAt: null,
+};
+
+function accountReducer(state = initialAccountState, action) {
   switch (action.type) {
     case 'account/deposit':
       return {
@@ -38,8 +45,34 @@ function reducer(state = initialState, action) {
   }
 }
 
+function customerReducer(state = initialCustomerState, action) {
+  switch (action.type) {
+    case 'customer/create':
+      return {
+        ...state,
+        fullName: action.payload.fullName,
+        nationalId: action.payload.nationalId,
+        createdAt: action.payload.createdAt,
+      };
+
+    case 'customer/updateFullName':
+      return {
+        ...state,
+        fullName: action.payload.fullName,
+      };
+
+    default:
+      return state;
+  }
+}
+
+const root = combineReducers({
+  account: accountReducer,
+  customer: customerReducer,
+});
+
 // 263. Creating a Redux Store
-const store = createStore(reducer);
+const store = createStore(root);
 
 // store.dispatch({ type: 'account/deposit', payload: 500 });
 // console.log(store.getState());
@@ -87,10 +120,34 @@ function logState() {
 }
 
 store.dispatch(deposit(500));
-logState();
+// logState();
 store.dispatch(withdraw(200));
-logState();
+// logState();
 store.dispatch(requestLoan(1000, 'car'));
-logState();
+// logState();
 store.dispatch(payLoan());
+// logState();
+
+function createCustomer(fullName, nationalId) {
+  return {
+    type: 'customer/create',
+    payload: {
+      fullName,
+      nationalId,
+      createdAt: new Date().toLocaleTimeString(),
+    },
+  };
+}
+
+function updateFullName(fullName) {
+  return {
+    type: 'customer/updateFullName',
+    payload: { fullName },
+  };
+}
+
+store.dispatch(createCustomer('kaushik', 123456));
+logState();
+
+store.dispatch(updateFullName('koushik'));
 logState();
