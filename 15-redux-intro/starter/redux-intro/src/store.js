@@ -1,6 +1,7 @@
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import accountReducer from './features/accounts/accountSlice';
 import customerReducer from './features/customers/customerSlice';
+import { thunk } from 'redux-thunk';
 
 // 262. Creating a Reducer: Bank Account
 
@@ -12,7 +13,7 @@ const root = combineReducers({
 });
 
 // 263. Creating a Redux Store
-export const store = createStore(root);
+export const store = createStore(root, applyMiddleware(thunk));
 
 export function logState() {
   console.log(store.getState());
