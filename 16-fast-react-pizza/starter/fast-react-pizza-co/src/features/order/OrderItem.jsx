@@ -1,15 +1,18 @@
-import { formatCurrency } from '../../utils/helpers';
+import { formatCurrency } from "../../utils/helpers";
 
-function OrderItem({ item, isLoadingIngredients, ingredients }) {
+function OrderItem({ item, isLoadingIngredients, ingredients, lastIndex }) {
   const { quantity, name, totalPrice } = item;
 
   return (
-    <li>
-      <div>
+    <li
+      className={`border-gray-300 py-2 ${lastIndex ? "border-b-2 border-t-2" : "border-t-2"}`}
+    >
+      <div className="flex justify-between">
         <p>
-          <span>{quantity}&times;</span> {name}
+          <span className="font-semibold">{quantity}&times;</span>{" "}
+          <span>{name}</span>
         </p>
-        <p>{formatCurrency(totalPrice)}</p>
+        <p className="font-semibold">{formatCurrency(totalPrice)}</p>
       </div>
     </li>
   );

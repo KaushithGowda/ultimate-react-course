@@ -1,30 +1,31 @@
-import { Form, redirect, useActionData } from 'react-router-dom';
-import { createOrder } from '../../services/apiRestaurant';
+import { Form, redirect, useActionData } from "react-router-dom";
+import { createOrder } from "../../services/apiRestaurant";
+import Button from "../../ui/Button";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-    str
+    str,
   );
 
 const fakeCart = [
   {
     pizzaId: 12,
-    name: 'Mediterranean',
+    name: "Mediterranean",
     quantity: 2,
     unitPrice: 16,
     totalPrice: 32,
   },
   {
     pizzaId: 6,
-    name: 'Vegetale',
+    name: "Vegetale",
     quantity: 1,
     unitPrice: 13,
     totalPrice: 13,
   },
   {
     pizzaId: 11,
-    name: 'Spinach and Mushroom',
+    name: "Spinach and Mushroom",
     quantity: 1,
     unitPrice: 15,
     totalPrice: 15,
@@ -37,39 +38,61 @@ function CreateOrder() {
   const formErrors = useActionData();
 
   return (
-    <div>
-      <h2>Ready to order? Let's go!</h2>
+    <div className="px-4 py-6">
+      <h2 className="mb-5 text-center text-xl font-semibold">
+        Ready to order? Let's go!
+      </h2>
 
-      <Form method="POST">
-        <div>
-          <label>First Name</label>
-          <input type="text" name="customer" required />
+      <Form method="POST" className="grid gap-4">
+        <div className="grid-row-[auto auto] grid items-center sm:grid-cols-[1fr_3fr] lg:grid-cols-[2fr_3fr_2fr]">
+          <label className="font-mono">First Name</label>
+          <input
+            className="input px-3 py-1"
+            type="text"
+            name="customer"
+            required
+          />
         </div>
 
-        <div>
-          <label>Phone number</label>
+        <div className="grid-row-[auto auto] mt-1 grid sm:grid-cols-[1fr_3fr] lg:grid-cols-[2fr_3fr_2fr]">
+          <label className="font-mono">Phone number</label>
           <div>
-            <input type="tel" name="phone" required />
+            <input
+              className="input w-full px-3 py-1"
+              type="tel"
+              name="phone"
+              required
+            />
+            {formErrors?.phone && (
+              <div className="mt-2 grid w-full items-center rounded-md bg-red-100 px-3 py-1 text-red-700">
+                {formErrors.phone}
+              </div>
+            )}
           </div>
-          {formErrors?.phone && <p>{formErrors.phone}</p>}
         </div>
 
-        <div>
-          <label>Address</label>
-          <div>
-            <input type="text" name="address" required />
-          </div>
+        <div className="grid-row-[auto auto] grid items-center sm:grid-cols-[1fr_3fr]  lg:grid-cols-[2fr_3fr_2fr]">
+          <label className="font-mono">Address</label>
+          <input
+            type="text"
+            name="address"
+            className="input px-3 py-1"
+            required
+          />
         </div>
 
-        <div>
+        <div className="space-x-2">
           <input
             type="checkbox"
             name="priority"
             id="priority"
+            className="accent-yellow-400"
             // value={withPriority}
             // onChange={(e) => setWithPriority(e.target.checked)}
           />
-          <label htmlFor="priority">Want to yo give your order priority?</label>
+          <label className="font-mono" htmlFor="priority">
+            Want to yo give your order priority?
+          </label>
         </div>
 
         <div>
@@ -77,7 +100,7 @@ function CreateOrder() {
         </div>
 
         <div>
-          <button>Order now</button>
+          <Button btnType={"primary"}>Order now</Button>
         </div>
       </Form>
     </div>
@@ -91,7 +114,7 @@ export async function action({ request }) {
   const orderData = {
     ...data,
     cart: JSON.parse(data.cart),
-    priority: data.priority === 'on',
+    priority: data.priority === "on",
   };
 
   const errors = {};
@@ -101,9 +124,10 @@ export async function action({ request }) {
 
   if (Object.keys(errors).length > 0) return errors;
 
-  const order = await createOrder(orderData);
+  // const order = await createOrder(orderData);
 
-  return redirect(`/order/${order.id}`);
+  // return redirect(`/order/${order.id}`);
+  return null;
 }
 
 export default CreateOrder;

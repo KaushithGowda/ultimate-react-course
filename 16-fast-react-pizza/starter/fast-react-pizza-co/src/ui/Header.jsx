@@ -1,10 +1,14 @@
-import { Link } from 'react-router-dom';
-import Search from './Search';
+import { Link } from "react-router-dom";
+import Search from "./Search";
 
 function Header() {
   return (
-    <div>
-      <Link to="/">Fast Pizza Co</Link>
+    <div className="flex flex-col justify-center bg-yellow-400 px-5 py-8 sm:flex-row sm:justify-between">
+      <Link to="/">
+        <div className="text-center font-mono text-lg font-semibold uppercase tracking-[0.2rem] sm:text-left sm:text-xl sm:tracking-[0.6rem]">
+          Fast React Pizza Co
+        </div>
+      </Link>
       <Search />
     </div>
   );
