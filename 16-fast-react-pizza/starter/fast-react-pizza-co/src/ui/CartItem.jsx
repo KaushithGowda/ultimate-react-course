@@ -15,9 +15,7 @@ function CartItem({ item }) {
       <div className="flex items-center justify-between gap-5">
         <div className="hidden sm:block">${item.totalPrice.toFixed(2)}</div>
         <div className="flex">
-          <Button type={"Link"} btnType={"primary"}>
-            Delete
-          </Button>
+          <Button btnType={"primary"}>Delete</Button>
         </div>
       </div>
     </li>
