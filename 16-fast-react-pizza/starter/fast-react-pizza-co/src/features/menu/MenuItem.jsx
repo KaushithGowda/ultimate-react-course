@@ -1,8 +1,23 @@
 import { formatCurrency } from "../../utils/helpers";
 import Button from "../../ui/Button";
+import { useDispatch } from "react-redux";
+import { addItem } from "../cart/cartSlice";
 
 function MenuItem({ pizza }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
+  const dispatch = useDispatch();
+
+  function handleAddtoCart() {
+    const newItem = {
+      pizzaId: id,
+      name,
+      quantity: 1,
+      unitPrice,
+      totalPrice: unitPrice * 1,
+    };
+    console.log(newItem);
+    dispatch(addItem(newItem));
+  }
 
   return (
     <li
@@ -22,13 +37,16 @@ function MenuItem({ pizza }) {
           className={`mt-auto flex justify-between ${!soldOut ? "" : "text-slate-500"}`}
         >
           {!soldOut ? <p>{formatCurrency(unitPrice)}</p> : <p>Sold out</p>}
-          <Button
-            disabled={soldOut}
-            classes={"text-xs sm:text-base sm:px-3 sm:py-1"}
-            btnType={"primary"}
-          >
-            Add to Cart
-          </Button>
+          {!soldOut && (
+            <Button
+              onClick={handleAddtoCart}
+              disabled={soldOut}
+              classes={"text-xs sm:text-base sm:px-3 sm:py-1"}
+              btnType={"primary"}
+            >
+              Add to Cart
+            </Button>
+          )}
         </div>
       </div>
     </li>
