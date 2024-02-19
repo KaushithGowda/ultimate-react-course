@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import Button from "./Button";
 import { deleteItem } from "../features/cart/cartSlice";
+import CartQuantity from "./CartQuantity";
 
 function CartItem({ item }) {
   const dispatch = useDispatch();
@@ -17,14 +18,7 @@ function CartItem({ item }) {
       </div>
       <div className="flex items-center justify-between gap-5">
         <div className="hidden sm:block">${item.totalPrice.toFixed(2)}</div>
-        <div className="flex">
-          <Button
-            onClick={() => dispatch(deleteItem(item.pizzaId))}
-            btnType={"primary"}
-          >
-            Delete
-          </Button>
-        </div>
+        <CartQuantity id={item.pizzaId} />
       </div>
     </li>
   );

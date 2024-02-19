@@ -1,35 +1,18 @@
 import { Link } from "react-router-dom";
 import Button from "../../ui/Button";
 import CartItem from "../../ui/CartItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearItem, getCart } from "./cartSlice";
+import EmptyCart from "./EmptyCart";
 
-export const fakeCart = [
-  {
-    pizzaId: 12,
-    name: "Mediterranean",
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: "Vegetale",
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: "Spinach and Mushroom",
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-];
+export const fakeCart = [];
 
 function Cart() {
-  const cart = fakeCart;
+  const cart = useSelector(getCart);
   const name = useSelector((state) => state.user.username);
+  const dispatch = useDispatch();
+
+  if (!cart.length > 0) return <EmptyCart />;
 
   return (
     <div className="px-3 pt-5">
@@ -54,7 +37,12 @@ function Cart() {
         <Button type={"Link"} btnType={"primary"} to="/order/new">
           Order pizzas
         </Button>
-        <Button classes={"ml-10"} type={"button"} btnType={"secondary"}>
+        <Button
+          onClick={() => dispatch(clearItem())}
+          classes={"ml-10"}
+          type={"button"}
+          btnType={"secondary"}
+        >
           Clear cart
         </Button>
       </div>

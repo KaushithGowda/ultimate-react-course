@@ -35,7 +35,7 @@ const fakeCart = [
 
 function CreateOrder() {
   // const [withPriority, setWithPriority] = useState(false);
-  const cart = fakeCart;
+  const cart = [];
   const formErrors = useActionData();
   const name = useSelector((state) => state.user.username);
 
