@@ -2,6 +2,9 @@ import { Form, redirect, useActionData } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import { clearItem, getCart } from "../cart/cartSlice";
+import store from "../../../store";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -34,8 +37,8 @@ const fakeCart = [
 ];
 
 function CreateOrder() {
-  // const [withPriority, setWithPriority] = useState(false);
-  const cart = [];
+  const [withPriority, setWithPriority] = useState(false);
+  const cart = useSelector(getCart);
   const formErrors = useActionData();
   const name = useSelector((state) => state.user.username);
 
@@ -90,8 +93,8 @@ function CreateOrder() {
             name="priority"
             id="priority"
             className="accent-yellow-400"
-            // value={withPriority}
-            // onChange={(e) => setWithPriority(e.target.checked)}
+            value={withPriority}
+            onChange={(e) => setWithPriority(e.target.checked)}
           />
           <label className="font-mono" htmlFor="priority">
             Want to yo give your order priority?
@@ -127,10 +130,11 @@ export async function action({ request }) {
 
   if (Object.keys(errors).length > 0) return errors;
 
-  // const order = await createOrder(orderData);
+  const order = await createOrder(orderData);
 
-  // return redirect(`/order/${order.id}`);
-  return null;
+  store.dispatch(clearItem());
+
+  return redirect(`/order/${order.id}`);
 }
 
 export default CreateOrder;
