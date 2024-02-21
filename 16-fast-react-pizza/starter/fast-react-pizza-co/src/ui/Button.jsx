@@ -14,6 +14,9 @@ function Button({ children, to, btnType, classes, disabled, onClick }) {
     round:
       base +
       "justify-center items-center text-sm p-2 bg-yellow-400 focus:bg-yellow-300 focus:ring-yellow-300 font-mono font-semibold flex rounded-[50%]",
+    small:
+      base +
+      "justify-center items-center text-sm py-1 px-2 bg-yellow-400 focus:bg-yellow-300 focus:ring-yellow-300 font-mono font-semibold flex rounded-full",
   };
 
   if (to)

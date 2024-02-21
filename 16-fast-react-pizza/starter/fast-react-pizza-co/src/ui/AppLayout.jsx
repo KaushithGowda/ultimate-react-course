@@ -13,7 +13,7 @@ function AppLayout() {
       <Header />
 
       <main className="h-full overflow-scroll bg-gray-200">
-        <div className="mx-auto my-auto h-full items-center justify-center">
+        <div className="mx-auto my-auto h-full max-w-5xl items-center justify-center">
           <Outlet />
         </div>
       </main>

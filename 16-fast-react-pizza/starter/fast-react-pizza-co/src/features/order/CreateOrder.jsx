@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import { clearItem, getCart } from "../cart/cartSlice";
 import store from "../../../store";
+import { useDispatch } from "react-redux";
+import { fetchAddress } from "../user/userSlice";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -12,35 +14,20 @@ const isValidPhone = (str) =>
     str,
   );
 
-const fakeCart = [
-  {
-    pizzaId: 12,
-    name: "Mediterranean",
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: "Vegetale",
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: "Spinach and Mushroom",
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-];
-
 function CreateOrder() {
   const [withPriority, setWithPriority] = useState(false);
   const cart = useSelector(getCart);
   const formErrors = useActionData();
-  const name = useSelector((state) => state.user.username);
+  const {
+    username,
+    position,
+    address,
+    status: addressStatus,
+    error: errordAddress,
+  } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const isLoadingAddress = addressStatus === "loading";
+  console.log(username, address, position, addressStatus, errordAddress);
 
   return (
     <div className="px-4 py-6">
@@ -49,18 +36,18 @@ function CreateOrder() {
       </h2>
 
       <Form method="POST" className="grid gap-4">
-        <div className="grid-row-[auto auto] grid items-center sm:grid-cols-[1fr_3fr] lg:grid-cols-[2fr_3fr_2fr]">
+        <div className="grid-row-[auto auto] grid items-center sm:grid-cols-[1fr_1fr]">
           <label className="font-mono">First Name</label>
           <input
             className="input px-3 py-1"
             type="text"
             name="customer"
             required
-            defaultValue={name}
+            defaultValue={username}
           />
         </div>
 
-        <div className="grid-row-[auto auto] mt-1 grid sm:grid-cols-[1fr_3fr] lg:grid-cols-[2fr_3fr_2fr]">
+        <div className="grid-row-[auto auto] mt-1 grid sm:grid-cols-[1fr_1fr]">
           <label className="font-mono">Phone number</label>
           <div>
             <input
@@ -77,14 +64,32 @@ function CreateOrder() {
           </div>
         </div>
 
-        <div className="grid-row-[auto auto] grid items-center sm:grid-cols-[1fr_3fr]  lg:grid-cols-[2fr_3fr_2fr]">
+        <div className="grid-row-[auto auto] relative grid items-center sm:grid-cols-[1fr_1fr]">
           <label className="font-mono">Address</label>
           <input
             type="text"
             name="address"
             className="input px-3 py-1"
+            disabled={isLoadingAddress}
+            defaultValue={address}
             required
           />
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(fetchAddress());
+            }}
+            btnType={"small"}
+            disabled={isLoadingAddress}
+            classes={"absolute right-[2px] z-50 top-[26px] sm:top-[2px]"}
+          >
+            {isLoadingAddress ? "Loading..." : "Get position"}
+          </Button>
+          {errordAddress && (
+            <div className="mt-2 grid w-full items-center rounded-md bg-red-100 px-3 py-1 text-red-700">
+              {errordAddress}
+            </div>
+          )}
         </div>
 
         <div className="space-x-2">
@@ -103,10 +108,21 @@ function CreateOrder() {
 
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+          <input
+            type="hidden"
+            name="position"
+            value={
+              position.latitude && position.longitude
+                ? `${position.latitude},${position.longitude}`
+                : ""
+            }
+          />
         </div>
 
         <div>
-          <Button btnType={"primary"}>Order now</Button>
+          <Button disabled={isLoadingAddress} btnType={"primary"}>
+            Order now
+          </Button>
         </div>
       </Form>
     </div>
