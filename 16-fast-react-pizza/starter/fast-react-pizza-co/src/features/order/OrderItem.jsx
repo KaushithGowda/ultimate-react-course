@@ -14,6 +14,9 @@ function OrderItem({ item, isLoadingIngredients, ingredients, lastIndex }) {
         </p>
         <p className="font-semibold">{formatCurrency(totalPrice)}</p>
       </div>
+      <p className="capitalize italic text-gray-400">
+        {!isLoadingIngredients ? ingredients.join(", ") : "Loading..."}
+      </p>
     </li>
   );
 }
